@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: Netmon Dashboards
+    orgId: 1
+    folder: Netmon
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+      # Grafana will watch this path and load any *.json dashboards
+      # that you place there.

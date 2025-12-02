@@ -1,0 +1,113 @@
+{
+  "id": null,
+  "uid": "netmon-main",
+  "title": "NetMon Overview",
+  "timezone": "",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "5m",
+  "tags": ["netmon"],
+  "style": "dark",
+  "panels": [
+    {
+      "type": "timeseries",
+      "id": 1,
+      "title": "Download / Upload",
+      "datasource": "Netmon InfluxDB",
+      "targets": [
+        {
+          "query": "SELECT mean(\"download_mbps\") FROM \"internet_speed\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "refId": "A"
+        },
+        {
+          "query": "SELECT mean(\"upload_mbps\") FROM \"internet_speed\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Mbps",
+          "min": 0,
+          "custom": {
+            "lineWidth": 2,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      },
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "id": 2,
+      "title": "Ping latency",
+      "datasource": "Netmon InfluxDB",
+      "targets": [
+        {
+          "query": "SELECT mean(\"average_response_ms\") FROM \"ping\" WHERE $timeFilter GROUP BY time($__interval), \"url\" fill(null)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "min": 0,
+          "custom": {
+            "lineWidth": 2,
+            "lineInterpolation": "smooth"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      },
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "stat",
+      "id": 3,
+      "title": "Active Devices",
+      "datasource": "Netmon InfluxDB",
+      "targets": [
+        {
+          "query": "SELECT last(\"count\") FROM \"net_active_devices\" WHERE $timeFilter",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "min": 0,
+          "max": 50,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        }
+      },
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 6 }
+    }
+  ],
+  "editable": true
+}

@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  influxdb:
+    build: ./influxdb
+    image: netmon-influxdb-alpine
+    container_name: netmon-influxdb
+    restart: unless-stopped
+    ports: [8086:8086]
+    volumes: [./data-influx:/var/lib/influxdb]
+
+  grafana:
+    build: ./grafana
+    image: netmon-grafana-alpine
+    container_name: netmon-grafana
+    restart: unless-stopped
+    depends_on: [influxdb]
+    ports: [3000:3000]
+    volumes:
+      # Grafana DB (users, prefs etc.)
+      - ./data-grafana:/var/lib/grafana
+      # Dashboards JSON from host mapped into the dashboards dir
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SERVER_ROOT_URL: http://localhost:3000
+
+  telegraf:
+    build: ./telegraf
+    image: netmon-telegraf-luajit
+    container_name: netmon-telegraf
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+    # Host networking so ping/arp-scan see the real LAN
+    network_mode: host
+    cap_add: [NET_RAW, NET_ADMIN]
+    # environment:
+      # Optional: override interface used by arp-scan (default eth0)
+      # ARP_SCAN_IFACE: "eth0"
