@@ -39,12 +39,14 @@
       },
       "targets": [
         {
-          "refId": "A",
+          "refId": "download",
+          "alias": "Download",
           "rawQuery": true,
           "query": "SELECT mean(\"download_mbps\") FROM \"internet_speed\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
         },
         {
-          "refId": "B",
+          "refId": "upload",
+          "alias": "Upload",
           "rawQuery": true,
           "query": "SELECT mean(\"upload_mbps\") FROM \"internet_speed\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
         }
@@ -76,7 +78,8 @@
       },
       "targets": [
         {
-          "refId": "A",
+          "refId": "ping",
+          "alias": "[[url]]",
           "rawQuery": true,
           "query": "SELECT mean(\"average_response_ms\") FROM \"ping\" WHERE $timeFilter GROUP BY time($__interval), \"url\" fill(null)"
         }
@@ -108,7 +111,8 @@
       },
       "targets": [
         {
-          "refId": "A",
+          "refId": "devices",
+          "alias": "Active devices",
           "rawQuery": true,
           "query": "SELECT last(\"count\") FROM \"net_active_devices\" WHERE $timeFilter"
         }
