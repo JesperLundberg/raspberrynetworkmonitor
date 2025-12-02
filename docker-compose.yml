@@ -1,9 +1,6 @@
-version: '3.9'
-
 services:
   influxdb:
-    build: ./influxdb
-    image: netmon-influxdb-alpine
+    image: influxdb:1.8
     container_name: netmon-influxdb
     restart: unless-stopped
     ports: [8086:8086]
